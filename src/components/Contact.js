@@ -2,6 +2,7 @@ import React from 'react';
 import ContactInfo from './ContactInfo';
 import ContactDetails from './ContactDetails';
 import update from 'react-addons-update';   // Immutability Helper
+import ContactCreate from './ContactCreate';
 
 export default class Contact extends React.Component {
     
@@ -56,6 +57,10 @@ export default class Contact extends React.Component {
     }
 
     handleRemove() {
+        // selectedKey가 아무것도 선택하지 않았을 때
+        if(this.state.selectedKey < 0) {
+            return;
+        }
         this.setState({
             contactData: update(this.state.contactData,
                 { $splice: [[this.state.selectedKey, 1]] }  // 선택된 애부터 1개의 데이터 삭제
@@ -112,7 +117,13 @@ export default class Contact extends React.Component {
                 */}
                 <ContactDetails 
                     isSelected={this.state.selectedKey != -1}
-                    contact={this.state.contactData[this.state.selectedKey]}/>
+                    contact={this.state.contactData[this.state.selectedKey]}
+                    onRemove={this.handleRemove}
+                    onEdit={this.handleEdit}    
+                />
+                <ContactCreate
+                    onCreate={this.handleCreate}
+                />
             </div>
         );
     }
