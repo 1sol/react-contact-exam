@@ -35,6 +35,28 @@ export default class Contact extends React.Component {
         
     }
 
+    // 새로고침 해도 만들었던 데이터들 남아있게 구현
+    // 컴포넌트가 mount되기 전에 실행
+    componentWillMount() {
+        // localStorage에서 contactData를 불러온다
+        const contactData = localStorage.contactData;
+
+        // contactData가 존재하면 JSON.parse를 통해 string형태를 객체형으로 바꿔준다
+        if(contactData) {
+            this.setState({
+                contactData: JSON.parse(contactData)
+            })
+        }
+    }
+
+    // 컴포넌트의 state가 업데이트 될때마다 실행됨
+    componentDidUpdate(prevProps, prevState) {
+        // contactData가 이전값과 지금값이 다르면 localStorage의 데이터를 현재값으로 저장
+        if(JSON.stringify(prevState.contactData) != JSON.stringify(this.state.contactData)) {
+            localStorage.contactData = JSON.stringify(this.state.contactData);
+        }
+    }
+
     handleChange(e) {
         this.setState({
             keyword: e.target.value
